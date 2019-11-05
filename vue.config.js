@@ -1,9 +1,9 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 let url = "http://xuxinapi.com:3000"
-let cdnUrl = "https://image.jiayuan.ccbhome.cn/scss/srss";
-// 打包后文件链接
-const baseURL = process.env.VUE_APP_TITLE === 'production' ? `${cdnUrl}/pc/` : "/"
+    // let cdnUrl = "https://image.jiayuan.ccbhome.cn/scss/srss";
+    // 打包后文件链接
+const baseURL = process.env.VUE_APP_TITLE === 'production' ? `/pc/` : "/"
     // 是否使用gzip
 const productionGzip = true
     // 需要gzip压缩的文件后缀

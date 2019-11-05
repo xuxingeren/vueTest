@@ -4,6 +4,8 @@ import Message from "ant-design-vue/lib/message"
 import cfg from '@/config'
 
 axios.defaults.baseURL = `${cfg.host}${cfg.port}${cfg.baseUrl}`
+axios.defaults.headers.post['Content-Type'] = 'application/json'
+axios.defaults.headers.get['Accept'] = 'application/json'
 axios.defaults.timeout = 100000
 axios.defaults.withCredentials = true
 NProgress.configure({
