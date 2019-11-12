@@ -271,13 +271,7 @@ export default {
       }
     };
   },
-  mounted() {
-    api("getInfo", {
-      id: 1341234
-    }).then(res => {
-      console.log(res);
-    });
-  },
+  mounted() {},
   methods: {
     onTabChange(key) {
       this.activeTitleKey = key;

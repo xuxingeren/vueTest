@@ -2,11 +2,13 @@ import axios from 'axios'
 import NProgress from "nprogress"
 import Message from "ant-design-vue/lib/message"
 import cfg from '@/config'
+import router from '@/router'
+import { removeCookit, getCookit } from '@/utils/cookie'
 
 axios.defaults.baseURL = `${cfg.host}${cfg.port}${cfg.baseUrl}`
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.get['Accept'] = 'application/json'
-axios.defaults.timeout = 100000
+axios.defaults.timeout = 10000
 axios.defaults.withCredentials = true
 NProgress.configure({
     showSpinner: false
@@ -14,6 +16,16 @@ NProgress.configure({
 
 axios.interceptors.request.use(
     config => {
+        let token = getCookit()
+        if (!token) {
+            console.log(router.currentRoute)
+                // (router.currentRoute.path !== "/login") && router.replace({
+                //     path: "/login"
+                // });
+        } else {
+            config.headers["xuxin-auth"] = "Bearer " + getCookit();
+        }
+        config.headers["resources-type"] = "pc";
         NProgress.start()
         return config
     },
@@ -31,8 +43,12 @@ axios.interceptors.response.use(res => {
     if (err.response) {
         let message = ''
         switch (err.response.status) {
+            case 401:
+                message = "登录失效";
+                removeCookit();
+                break;
             case 404:
-                message = err.response.data;
+                message = err.response.data.message;
                 break;
             case 500:
                 message = err.response.data.message;
