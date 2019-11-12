@@ -15,9 +15,9 @@ if (config.type === 'development') {
     config.port = ':3000'
     config.host = 'http://localhost'
 } else if (config.type === 'production') {
-    config.baseUrl = '/'
-        // config.host = 'http://xuxinapi.com'
-        // config.port = ':3000'
+    config.baseUrl = '/api'
+    config.host = 'http://xuxinapi.com'
+    config.port = ':3000'
 } else if (config.type === 'test') {
     // config.baseUrl = '/api'
 }
