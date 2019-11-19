@@ -1,15 +1,15 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const SentryCliPlugin = require('@sentry/webpack-plugin')
 let url = "http://xuxinapi.com:3000"
-    // let cdnUrl = "https://image.jiayuan.ccbhome.cn/scss/srss";
-    // 打包后文件链接
-const baseURL = process.env.VUE_APP_TITLE === 'production' ? `/pc/` : "/"
-    // 是否使用gzip
-const productionGzip = true
-    // 需要gzip压缩的文件后缀
-const productionGzipExtensions = ['js', 'css']
-    // 是否移除console
-const closeConsole = false
+
+const buildcfg = {
+    baseURL: process.env.VUE_APP_TITLE === 'production' ? `/pc/` : "/", // 打包后文件链接
+    productionGzip: true, // 是否使用gzip
+    productionGzipExtensions: ['js', 'css'], // 需要gzip压缩的文件后缀
+    closeConsole: false, // 是否移除console
+    sourcemapUpload: true // 是否上传sourcemap到sentry
+}
 
 const externals = {
     'vue': 'Vue',
@@ -49,16 +49,16 @@ const cdn = {
     }
 }
 console.log(`环境变量：${process.env.VUE_APP_TITLE}, 
-是否使用免费cdn：${process.env.VUE_APP_NETWORK}, 
-打包后文件链接：${baseURL}, 
-是否启用gzip压缩：${productionGzip},
-是否移除console：${closeConsole}
+是否上传sourcemap到sentry：${buildcfg.sourcemapUpload},
+打包后文件baseURL：${buildcfg.baseURL}, 
+是否启用gzip压缩：${buildcfg.productionGzip},
+是否移除console：${buildcfg.closeConsole}
 `)
 module.exports = {
     // publicPath: baseURL,
     // outputDir: 'pc',
     lintOnSave: true,
-    productionSourceMap: false,
+    productionSourceMap: buildcfg.sourcemapUpload,
     chainWebpack: (config) => {
         config.module.rule('worker')
             .test(/\.worker\.js$/)
@@ -84,7 +84,7 @@ module.exports = {
         if (process.env.VUE_APP_TITLE === 'production') {
             config.mode = 'production'
                 // 移除console
-            if (closeConsole) {
+            if (buildcfg.closeConsole) {
                 let optimization = {
                     minimizer: [
                         new UglifyJsPlugin({
@@ -101,11 +101,20 @@ module.exports = {
                 }
                 Object.assign(config, { optimization })
             }
-            productionGzip && config.plugins.push(
+            buildcfg.productionGzip && config.plugins.push(
                 new CompressionWebpackPlugin({
-                    test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+                    test: new RegExp('\\.(' + buildcfg.productionGzipExtensions.join('|') + ')$'),
                     threshold: 8192,
                     minRatio: 0.8
+                })
+            )
+            buildcfg.sourcemapUpload && config.plugins.push(
+                new SentryCliPlugin({
+                    include: './dist',
+                    ignoreFile: '.sentrycliignore',
+                    ignore: ['node_modules', 'webpack.config.js'],
+                    configFile: 'sentry.properties',
+                    urlPrefix: '~/'
                 })
             )
         } else {

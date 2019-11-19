@@ -18,10 +18,9 @@ axios.interceptors.request.use(
     config => {
         let token = getCookit()
         if (!token) {
-            console.log(router.currentRoute)
-                // (router.currentRoute.path !== "/login") && router.replace({
-                //     path: "/login"
-                // });
+            router.replace({
+                path: "/login"
+            });
         } else {
             config.headers["xuxin-auth"] = "Bearer " + getCookit();
         }
@@ -43,6 +42,9 @@ axios.interceptors.response.use(res => {
     if (err.response) {
         let message = ''
         switch (err.response.status) {
+            case 400:
+                message = err.response.data.message;
+                break;
             case 401:
                 message = "登录失效";
                 removeCookit();

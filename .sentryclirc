@@ -1,0 +1,7 @@
+[auth]
+token=4f29b57e96564759bf76d05528c64eaff3ad0c1ffabd4df2a388f5d6c361780c
+
+[defaults]
+org=xuxin
+project=vue
+url=https://sentry.io/

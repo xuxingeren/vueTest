@@ -27,12 +27,12 @@ export default new VueRouter({
     routes: [
         { path: '/', redirect: { name: 'Login' } },
         {
-            path: '/Hello',
+            path: '/hello',
             name: 'Hello',
             component: Hello,
             meta: { title: '首页' }
         }, {
-            path: '/Test',
+            path: '/test',
             name: 'Test',
             component: Test,
             meta: { title: 'Test' }

@@ -271,7 +271,8 @@ export default {
       }
     };
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     onTabChange(key) {
       this.activeTitleKey = key;
@@ -310,6 +311,9 @@ export default {
               //   setCookie("key", "123");
               // }
               this.$message.success("登录成功");
+              this.$router.push({
+                path: "/hello"
+              });
               console.log(res);
             });
             console.info("success", values);
