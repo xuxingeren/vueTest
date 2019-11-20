@@ -112,6 +112,7 @@ module.exports = {
                 new SentryCliPlugin({
                     include: './dist',
                     ignoreFile: '.sentrycliignore',
+                    release: process.env.RELEASE_VERSION,
                     ignore: ['node_modules', 'webpack.config.js'],
                     configFile: 'sentry.properties',
                     urlPrefix: '~/'
