@@ -5,8 +5,14 @@
 </template>
 
 <script>
-
 export default {
-  name: 'app'
-}
+  name: "app"
+};
 </script>
+
+<style lang="scss" scoped>
+#app {
+  height: 100%;
+  display: flex;
+}
+</style>

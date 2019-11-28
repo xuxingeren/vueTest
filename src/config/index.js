@@ -2,23 +2,23 @@
 const env = process.env
 
 let config = {
-    host: "",
-    port: "",
-    baseUrl: "",
-    type: "development"
+  host: "",
+  port: "",
+  baseUrl: "",
+  type: "development"
 }
 
 config.type = env.VUE_APP_TITLE
 
 if (config.type === 'development') {
-    // config.baseUrl = '/api'
-    config.port = ':3000'
-    config.host = 'http://localhost'
+  // config.baseUrl = '/api'
+  config.port = ':3000'
+  config.host = 'http://localhost'
 } else if (config.type === 'production') {
-    // config.baseUrl = '/api'
-    config.host = 'http://xuxinapi.com'
-    config.port = ':3000'
+  // config.baseUrl = '/api'
+  config.host = 'http://xuxinapi.com'
+  config.port = ':3000'
 } else if (config.type === 'test') {
-    // config.baseUrl = '/api'
+  // config.baseUrl = '/api'
 }
 export default config
