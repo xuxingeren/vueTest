@@ -12,7 +12,16 @@ export default [{
     component: () => import('../containers/index'),
     meta: {
       title: '首页'
-    }
+    },
+    children: [{
+      path: '/test',
+      name: 'Test',
+      component: () =>
+        import('../views/Test'),
+      meta: {
+        title: 'test'
+      }
+    }]
   },
   {
     path: '/login',
@@ -20,14 +29,6 @@ export default [{
     component: () => import('../views/Login'),
     meta: {
       title: '登录'
-    }
-  }, {
-    path: '/visibilitychange',
-    name: 'visibilitychange',
-    component: () =>
-      import('../views/visibilitychange'),
-    meta: {
-      title: 'visibilitychange'
     }
   }, {
     path: '/403',

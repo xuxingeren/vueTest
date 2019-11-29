@@ -1,6 +1,8 @@
 const user = {
   state: {
     menus: [],
+    collapsed: false,
+    menusOpenKeys: ['/system']
   },
   actions: {
     //注销session
@@ -17,6 +19,9 @@ const user = {
   mutations: {
     SET_MENU: (state, menu) => {
       state.menu = menu
+    },
+    SET_COLLAPSED: (state, flag) => {
+      state.collapsed = flag
     }
   }
 

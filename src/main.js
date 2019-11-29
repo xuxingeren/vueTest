@@ -4,15 +4,18 @@ import antd from 'ant-design-vue'
 import router from './router'
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
-import VueBaiduMap from 'vue-baidu-map'
 import store from './store';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
 import './permission'
+import "nprogress/nprogress.css";
+import 'ant-design-vue/dist/antd.css';
 
+moment.locale('zh-cn');
 Vue.config.productionTip = false
 Vue.use(antd)
 
 if (process.env.VUE_APP_TITLE === 'production') {
-  Vue.use(window['vue-cropper'])
   Sentry.init({
     dsn: 'https://801acda20a7248558355c594a5ecc5b2@sentry.io/1826001',
     integrations: [new Integrations.Vue({
@@ -21,12 +24,8 @@ if (process.env.VUE_APP_TITLE === 'production') {
       logErrors: true
     })],
   });
-} else {
-  Vue.use(require('vue-cropper').default)
 }
-Vue.use(VueBaiduMap, {
-  ak: 'fWSrZTFEzCkfpqQktqQnnBqVwNTNr4H2'
-})
+
 new Vue({
   router,
   store,

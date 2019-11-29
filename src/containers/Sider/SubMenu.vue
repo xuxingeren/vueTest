@@ -6,7 +6,7 @@
     <template v-for="item in props.menuInfo.children">
       <a-menu-item
         v-if="!(item.children && item.children.length > 0)"
-        :key="item.key"
+        :key="item.path"
       >
         <a-icon :type="item.icon" />
         <span>{{ item.title }}</span>

@@ -16,20 +16,16 @@ const externals = {
     'vue-router': 'VueRouter',
     'vuex': 'Vuex',
     'axios': 'axios',
-    'vue-baidu-map': 'VueBaiduMap',
     'nprogress': 'NProgress',
-    'ant-design-vue': 'antd',
-    'vue-cropper': 'vue-cropper'
+    'ant-design-vue': 'antd'
 }
 const cdn = {
     dev: {
         css: [
-            'https://cdn.jsdelivr.net/npm/ant-design-vue@1.3.13/dist/antd.min.css',
-            'https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css'
+            // 'https://cdn.jsdelivr.net/npm/ant-design-vue@1.3.13/dist/antd.min.css',
+            // 'https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css'
         ],
-        js: [
-            'https://cdn.jsdelivr.net/npm/vue-cropper@0.4.9/dist/index.min.js'
-        ]
+        js: []
     },
     prod: {
         css: [
@@ -41,10 +37,8 @@ const cdn = {
             'https://cdn.jsdelivr.net/npm/vue-router@3.0.7/dist/vue-router.min.js',
             'https://cdn.jsdelivr.net/npm/vuex@3.1.1/dist/vuex.min.js',
             'https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js',
-            'https://cdn.jsdelivr.net/npm/vue-baidu-map',
             'https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js',
-            'https://cdn.jsdelivr.net/npm/ant-design-vue@1.3.13/dist/antd.min.js',
-            'https://cdn.jsdelivr.net/npm/vue-cropper@0.4.9/dist/index.min.js'
+            'https://cdn.jsdelivr.net/npm/ant-design-vue@1.3.13/dist/antd.min.js'
         ]
     }
 }
@@ -83,7 +77,7 @@ module.exports = {
     configureWebpack: (config) => {
         if (process.env.VUE_APP_TITLE === 'production') {
             config.mode = 'production'
-                // 移除console
+            // 移除console
             if (buildcfg.closeConsole) {
                 let optimization = {
                     minimizer: [
@@ -99,7 +93,9 @@ module.exports = {
                         })
                     ]
                 }
-                Object.assign(config, { optimization })
+                Object.assign(config, {
+                    optimization
+                })
             }
             buildcfg.productionGzip && config.plugins.push(
                 new CompressionWebpackPlugin({

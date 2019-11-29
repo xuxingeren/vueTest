@@ -1,19 +1,17 @@
 <template>
-  <a-layout-sider class="sider">
-    <!-- <a-button
-      type="primary"
-      @click="toggleCollapsed"
-      style="margin-bottom: 16px"
-    >
-      <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
-    </a-button> -->
+  <a-layout-sider
+    class="sider"
+    breakpoint="lg"
+    @collapse="onCollapse"
+    @breakpoint="onBreakpoint"
+    v-model="collapsed"
+  >
     <a-menu
-      :defaultSelectedKeys="['1']"
-      :defaultOpenKeys="['2']"
+      :defaultSelectedKeys="[$route.path]"
+      :defaultOpenKeys="menusOpenKeys"
       mode="inline"
       theme="dark"
       @click="open"
-      :inlineCollapsed="collapsed"
     >
       <template v-for="item in menus">
         <a-menu-item
@@ -43,33 +41,31 @@ export default {
   },
   data() {
     return {
-      list: [
-        {
-          key: "1",
-          title: "Option 1"
-        },
-        {
-          key: "2",
-          title: "Navigation 2",
-          children: [
-            {
-              key: "2.1",
-              title: "Navigation 3"
-            }
-          ]
-        }
-      ]
+      defaultSelectedKeys: []
     };
   },
   computed: {
-    ...mapGetters(["menus", "collapsed"])
+    ...mapGetters(["menus", "menusOpenKeys"]),
+    collapsed: {
+      get: function() {
+        return this.$store.state.user.collapsed;
+      },
+      set: function(newValue) {
+        this.$store.commit("SET_COLLAPSED", newValue);
+      }
+    }
   },
   methods: {
-    titleClick({ item, key, keyPath }) {
-      console.log(item, key, keyPath);
+    open({ key }) {
+      this.$router.push({
+        path: key
+      });
     },
-    open() {
-      console.log(arguments);
+    onCollapse(collapsed, type) {
+      console.log(collapsed, type);
+    },
+    onBreakpoint(broken) {
+      console.log(broken);
     }
   }
 };
@@ -77,10 +73,8 @@ export default {
 
 <style lang="scss" scoped>
 .sider {
-  flex: 0 0 256px;
-  overflow: "auto";
-  height: "100vh";
-  position: "fixed";
+  height: 100vh;
+  position: fixed;
   left: 0;
 }
 </style>
