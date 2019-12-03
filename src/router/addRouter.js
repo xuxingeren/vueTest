@@ -1,8 +1,53 @@
 import router from './index'
-let routerList = []
+import Layout from "@/containers/index"
+let routerList = [{
+  path: '/',
+  name: 'Index',
+  redirect: '/workbench',
+  component: Layout,
+  meta: {
+    title: '首页'
+  },
+  children: [{
+    path: '/test',
+    name: 'Test',
+    isAdd: true,
+    component: () =>
+      import('../views/Test'),
+    meta: {
+      title: 'test'
+    }
+  }, {
+    path: '/403',
+    name: '403',
+    component: () => import('@/components/errorPage/403'),
+    meta: {
+      title: '403'
+    }
+  }, {
+    path: '/404',
+    name: '404',
+    component: () => import('@/components/errorPage/404'),
+    meta: {
+      title: '404'
+    }
+  }, {
+    path: '/500',
+    name: '500',
+    component: () => import('@/components/errorPage/500'),
+    meta: {
+      title: '500'
+    }
+  }]
+}]
 let indexKey = {}
 
 function addRouter(list) {
+  // import(`../views/workbench`).then(module => {
+  //   console.log(module)
+  // }).catch(err => {
+  //   console.log(err)
+  // })
   return new Promise((resolve, reject) => {
     try {
       list.map(s => {
@@ -16,7 +61,29 @@ function addRouter(list) {
               path: s.path,
               name: comName,
               component(resolve) {
-                require([`../views${s.path}.vue`], resolve)
+                import(`../views${s.path}`).then(module => {
+                  resolve(module)
+                }).catch(err => {
+                  console.log(err)
+                })
+              },
+              meta: {
+                title: s.title
+              },
+              title: s.title,
+              icon: s.icon,
+              children: []
+            })
+          } else {
+            routerList[0].children.push({
+              path: s.path,
+              name: comName,
+              component(resolve) {
+                import(`../views${s.path}`).then(module => {
+                  resolve(module)
+                }).catch(err => {
+                  console.log(err)
+                })
               },
               meta: {
                 title: s.title
@@ -31,7 +98,11 @@ function addRouter(list) {
             path: s.path,
             name: comName,
             component(resolve) {
-              require([`../containers/index`], resolve)
+              import(`../views${s.path}`).then(module => {
+                resolve(module)
+              }).catch(err => {
+                console.log(err)
+              })
             },
             meta: {
               title: s.title

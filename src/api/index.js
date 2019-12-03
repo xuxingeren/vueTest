@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import resource from './resource'
 
-export default function (name, params) {
+export default function (name, params, other = {}) {
   let paths = name.split('.')
   let apiArgs = resource
   paths.forEach(item => {
@@ -14,7 +14,8 @@ export default function (name, params) {
     let arg = {
       method: apiArgs.method,
       url: apiArgs.url,
-      params
+      params,
+      other
     }
     return request(arg)
   }

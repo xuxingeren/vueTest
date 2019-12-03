@@ -73,7 +73,8 @@ export default function (options) {
     method: options.method,
     url: options.url,
     params: options.params,
-    data: options.params
+    data: options.params,
+    ...options.other
   }
   if (options.method.toLowerCase() === 'get') {
     delete params.data

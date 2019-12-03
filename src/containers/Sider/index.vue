@@ -15,11 +15,11 @@
     >
       <template v-for="item in menus">
         <a-menu-item
-          v-if="!(item.children && item.children.length > 0)"
-          :key="item.path"
+          v-if="!(item.children && item.children.length > 0) || item.name==='Index'"
+          :key="item.name==='Index' ? item.children[0].path : item.path"
         >
-          <a-icon :type="item.icon" />
-          <span>{{item.title}}</span>
+          <a-icon :type="item.name==='Index' ? item.children[0].icon : item.icon" />
+          <span>{{item.name==='Index' ? item.children[0].title : item.title}}</span>
         </a-menu-item>
         <sub-menu
           v-else
