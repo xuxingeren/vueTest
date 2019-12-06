@@ -6,6 +6,23 @@
     @breakpoint="onBreakpoint"
     v-model="collapsed"
   >
+    <div class="searchBox">
+      <a-input-search
+        v-if="!collapsed"
+        placeholder="请输入"
+        class="searchInput"
+        :allowClear="true"
+        @search="onSearch"
+        @change="onChange"
+        :autoFocus="true"
+      />
+      <a-icon
+        v-else
+        @click="collapsed=false"
+        class="searchIcon"
+        type="search"
+      />
+    </div>
     <a-menu
       :defaultSelectedKeys="[$route.path]"
       :defaultOpenKeys="menusOpenKeys"
@@ -15,11 +32,11 @@
     >
       <template v-for="item in menus">
         <a-menu-item
-          v-if="!(item.children && item.children.length > 0) || item.name==='Index'"
+          v-if="!(item.children && item.children.length > 0)"
           :key="item.name==='Index' ? item.children[0].path : item.path"
         >
-          <a-icon :type="item.name==='Index' ? item.children[0].icon : item.icon" />
-          <span>{{item.name==='Index' ? item.children[0].title : item.title}}</span>
+          <a-icon :type="item.icon" />
+          <span>{{item.meta.title}}</span>
         </a-menu-item>
         <sub-menu
           v-else
@@ -61,6 +78,12 @@ export default {
         path: key
       });
     },
+    onSearch(val) {
+      this.$store.commit("FIND_MENU", val.trim());
+    },
+    onChange(e) {
+      if (!e.currentTarget.value.trim()) this.$store.commit("FIND_MENU", "");
+    },
     onCollapse(collapsed, type) {
       console.log(collapsed, type);
     },
@@ -76,5 +99,20 @@ export default {
   height: 100vh;
   position: fixed;
   left: 0;
+  .searchBox {
+    height: 32px;
+    background: #fff;
+    margin: 16px;
+    border-radius: 4px;
+    .searchIcon {
+      vertical-align: top;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 </style>

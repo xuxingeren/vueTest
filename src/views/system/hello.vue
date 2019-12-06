@@ -1,11 +1,12 @@
 <template>
   <div>
-    <a-button @click="close">close</a-button>
-    <a-button @click="notice">通知一下我的父窗口</a-button>
+    <a-button>close</a-button>
+    <a-button>通知一下我的父窗口</a-button>
   </div>
 </template>
 
 <script>
+import Worker from "@/utils/test.worker.js";
 export default {
   name: "Hello",
   data() {
@@ -15,30 +16,12 @@ export default {
     };
   },
   mounted() {
-    let _this = this;
-    this.$nextTick(() => {
-      window.addEventListener("message", function(e) {
-        if (e.data.type === "postMessage") {
-          console.log(e.data.text);
-          console.log(e);
-          _this.parent = e.source;
-        }
-      });
+    var worker = new Worker();
+    worker.addEventListener("message", function(event) {
+      console.log(event);
     });
+    worker.postMessage({ a: 1 });
   },
-  methods: {
-    close() {
-      window.close();
-    },
-    notice() {
-      this.parent.postMessage(
-        {
-          type: "postMessage",
-          text: "给我刷新"
-        },
-        "http://localhost:8081/visibilitychange"
-      );
-    }
-  }
+  methods: {}
 };
 </script>

@@ -1,7 +1,7 @@
 <template functional>
   <a-sub-menu :key="props.menuInfo.path">
     <span slot="title">
-      <a-icon :type="props.menuInfo.icon" /><span>{{ props.menuInfo.title }}</span>
+      <a-icon :type="props.menuInfo.icon" /><span>{{ props.menuInfo.meta.title }}</span>
     </span>
     <template v-for="item in props.menuInfo.children">
       <a-menu-item
@@ -9,7 +9,7 @@
         :key="item.path"
       >
         <a-icon :type="item.icon" />
-        <span>{{ item.title }}</span>
+        <span>{{ item.meta.title }}</span>
       </a-menu-item>
       <sub-menu
         v-else

@@ -13,6 +13,7 @@ export default {
 <style lang="scss" scoped>
 .content-view {
   margin: 24px;
+  border-radius: 4px;
   background-color: #fff;
 }
 </style>

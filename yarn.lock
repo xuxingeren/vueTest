@@ -9634,6 +9634,13 @@ vue-baidu-map@^0.21.22:
     bmaplib.markerclusterer "^1.0.13"
     markdown-it "^8.4.0"
 
+vue-cli-plugin-webpack-bundle-analyzer@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/vue-cli-plugin-webpack-bundle-analyzer/download/vue-cli-plugin-webpack-bundle-analyzer-2.0.0.tgz#160fbd492a673bae1be3a9f714db12218678fa01"
+  integrity sha1-Fg+9SSpnO64b46n3FNsSIYZ4+gE=
+  dependencies:
+    webpack-bundle-analyzer "^3.6.0"
+
 vue-cropper@^0.4.9:
   version "0.4.9"
   resolved "https://registry.yarnpkg.com/vue-cropper/-/vue-cropper-0.4.9.tgz#fe650f32516ecf29014bbd4a9079191c8dc5a5ae"

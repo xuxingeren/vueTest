@@ -2,6 +2,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const SentryCliPlugin = require('@sentry/webpack-plugin')
 const childProcess = require('child_process');
+const buildAfter = require('./src/utils/buildAfter')
 const gitObj = {
   dev: 'development',
   test: 'test',
@@ -16,7 +17,7 @@ const buildcfg = {
   baseURL: process.env.VUE_APP_TITLE === 'production' ? `/pc/` : "/", // 打包后文件链接
   productionGzip: true, // 是否使用gzip
   productionGzipExtensions: ['js', 'css'], // 需要gzip压缩的文件后缀
-  closeConsole: false, // 是否移除console
+  closeConsole: true, // 是否移除console
   sourcemapUpload: false, // 是否上传sourcemap到sentry
   gitBuild: true, // 是否启用git打包限制
   externals: { // 忽略打包
@@ -29,7 +30,7 @@ const buildcfg = {
   }
 }
 
-if (buildcfg.env !== gitObj[buildcfg.gitBranch] && buildcfg.gitBuild && process.env.NODE_ENV !== gitObj['dev']) {
+if (buildcfg.env !== gitObj[buildcfg.gitBranch] && buildcfg.gitBuild && process.argv[2] !== 'serve' && process.argv[4] !== 'analyz') {
   console.log(`打包环境和git分支不一致，终止打包，
   目标环境：${buildcfg.env}，
   当前分支：${buildcfg.gitBranch}，对应环境变量：${gitObj[buildcfg.gitBranch]}`)
@@ -80,9 +81,6 @@ module.exports = {
     config.module.rule('js').exclude.add(/\.worker\.js$/)
     if (~['analyz', 'production'].indexOf(buildcfg.env)) {
       config.externals(buildcfg.externals)
-      if (buildcfg.env === 'analyz') {
-        config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
-      }
     }
     config.plugin('html').tap(args => {
       if (~['analyz', 'production'].indexOf(buildcfg.env)) {
@@ -94,28 +92,20 @@ module.exports = {
     })
   },
   configureWebpack: (config) => {
-    if (buildcfg.env === 'production') {
+    if (~['analyz', 'production'].indexOf(buildcfg.env)) {
       config.mode = 'production'
-      // 移除console
-      if (buildcfg.closeConsole) {
-        let optimization = {
-          minimizer: [
-            new UglifyJsPlugin({
-              uglifyOptions: {
-                warnings: false,
-                compress: {
-                  drop_console: true,
-                  drop_debugger: false,
-                  pure_funcs: ['console.log']
-                }
-              }
-            })
-          ]
-        }
-        Object.assign(config, {
-          optimization
+      buildcfg.closeConsole && config.plugins.push(
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            warnings: false,
+            compress: {
+              drop_console: true,
+              drop_debugger: false,
+              pure_funcs: ['console.log']
+            }
+          }
         })
-      }
+      )
       buildcfg.productionGzip && config.plugins.push(
         new CompressionWebpackPlugin({
           test: new RegExp('\\.(' + buildcfg.productionGzipExtensions.join('|') + ')$'),
@@ -123,19 +113,22 @@ module.exports = {
           minRatio: 0.8
         })
       )
-      buildcfg.sourcemapUpload && config.plugins.push(
-        new SentryCliPlugin({
-          include: './dist',
-          ignoreFile: '.sentrycliignore',
-          release: process.env.RELEASE_VERSION,
-          ignore: ['node_modules', 'webpack.config.js'],
-          configFile: 'sentry.properties',
-          urlPrefix: '~/'
-        })
-      )
+      if (buildcfg.env === 'production' && buildcfg.sourcemapUpload) {
+        config.plugins.push(
+          new SentryCliPlugin({
+            include: './dist',
+            ignoreFile: '.sentrycliignore',
+            release: process.env.RELEASE_VERSION,
+            ignore: ['node_modules', 'webpack.config.js'],
+            configFile: 'sentry.properties',
+            urlPrefix: '~/'
+          })
+        )
+      }
     } else {
       config.mode = 'development'
     }
+    config.plugins.push(new buildAfter())
   },
   devServer: {
     open: true,
@@ -154,6 +147,12 @@ module.exports = {
       //         '^/ws': '/'
       //     }
       // }
+    }
+  },
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: buildcfg.env === 'analyz',
+      analyzerMode: buildcfg.env === 'analyz' ? 'server' : 'disabled'
     }
   }
 }

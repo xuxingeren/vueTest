@@ -1,24 +1,40 @@
 const user = {
   state: {
+    userInfo: {
+      name: '徐新',
+      uid: '',
+      avatar: ''
+    },
     menus: [],
+    menusAll: [],
     collapsed: false,
     menusOpenKeys: ['/system']
   },
   actions: {
-    //注销session
-    FedLogOut({
+    logOut({
       commit
     }) {
-      return new Promise(resolve => {
-        commit('SET_MENU', [])
-        commit('DEL_ALL_TAG');
-        resolve()
+      commit('SET_MENU_ALL', [])
+      sessionStorage.clear()
+      console.log('登出清空数据')
+      return Promise.resolve({
+        success: true
       })
     }
   },
   mutations: {
-    SET_MENU: (state, menu) => {
-      state.menu = menu
+    FIND_MENU: (state, val) => {
+      if (val) {
+
+        state.menus = []
+      } else {
+        state.menus = state.menusAll
+      }
+    },
+    SET_MENU_ALL: (state, menus) => {
+      state.menusAll = menus
+      state.menus = menus
+      console.log(`菜单: ${menus}`)
     },
     SET_COLLAPSED: (state, flag) => {
       state.collapsed = flag

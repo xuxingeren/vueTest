@@ -271,7 +271,9 @@ export default {
       }
     };
   },
-  mounted() {},
+  mounted() {
+    this.$store.dispatch("logOut");
+  },
   methods: {
     onTabChange(key) {
       this.activeTitleKey = key;

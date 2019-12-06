@@ -17,6 +17,7 @@ NProgress.configure({
 })
 
 router.beforeEach((to, from, next) => {
+  NProgress.start()
   if (nextUrl.includes(to.path)) {
     if (from.path === "/login") {
       next(false)
@@ -25,11 +26,12 @@ router.beforeEach((to, from, next) => {
     }
     return false
   }
-  let menus = SgetItem('menus')
+  // let menus = SgetItem('menus')
+  let menus
   if ((store.state.user.menus && store.state.user.menus.length > 0) || (menus && menus.length > 0)) {
     if (to.name === null) {
       addRouter(menus).then(data => {
-        store.state.user.menus = data
+        store.commit('SET_MENU_ALL', data)
         next({
           ...to,
           replace: true
@@ -46,8 +48,7 @@ router.beforeEach((to, from, next) => {
     api('getRouteList').then(res => {
       SsetItem('menus', res.data)
       addRouter(res.data).then(data => {
-        store.state.user.menus = data
-        console.log(data)
+        store.commit('SET_MENU_ALL', data)
         next({
           ...to,
           replace: true
@@ -59,7 +60,6 @@ router.beforeEach((to, from, next) => {
       })
     })
   }
-  NProgress.start()
 })
 
 router.afterEach((to) => {
