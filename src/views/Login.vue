@@ -191,6 +191,7 @@
 <script>
 import api from "@/api";
 import { setCookie } from "@/utils/cookie";
+import { rsaEncrypt } from "@/utils/encryption";
 
 export default {
   data() {
@@ -293,10 +294,12 @@ export default {
         { force: true },
         (err, values) => {
           if (!err) {
-            api("register", values).then(res => {
+            api("register", {
+              user: rsaEncrypt(values.user),
+              password: rsaEncrypt(values.password)
+            }).then(res => {
               console.log(res);
             });
-            console.info("success", values);
           }
         }
       );

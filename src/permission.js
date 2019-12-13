@@ -26,8 +26,7 @@ router.beforeEach((to, from, next) => {
     }
     return false
   }
-  // let menus = SgetItem('menus')
-  let menus
+  let menus = SgetItem('menus')
   if ((store.state.user.menus && store.state.user.menus.length > 0) || (menus && menus.length > 0)) {
     if (to.name === null) {
       addRouter(menus).then(data => {
@@ -38,7 +37,8 @@ router.beforeEach((to, from, next) => {
         })
       }).catch(() => {
         next({
-          path: "/login"
+          path: "/login",
+          replace: true
         })
       })
     } else {
@@ -55,7 +55,8 @@ router.beforeEach((to, from, next) => {
         })
       }).catch(() => {
         next({
-          path: "/login"
+          path: "/login",
+          replace: true
         })
       })
     })

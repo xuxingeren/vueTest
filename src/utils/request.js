@@ -49,20 +49,11 @@ axios.interceptors.response.use(res => {
   if (err.response) {
     let message = ''
     switch (err.response.status) {
-      case 400:
-        message = err.response.data.message;
-        break;
       case 401:
-        message = "登录失效";
         removeCookit();
         break;
-      case 404:
-        message = err.response.data.message;
-        break;
-      case 500:
-        message = err.response.data.message;
-        break;
     }
+    message = err.response.data.message;
     Message.error(message);
   }
   return Promise.reject(err.response.data)
