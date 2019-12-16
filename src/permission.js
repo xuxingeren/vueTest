@@ -28,6 +28,7 @@ router.beforeEach((to, from, next) => {
   }
   let menus = SgetItem('menus')
   if ((store.state.user.menus && store.state.user.menus.length > 0) || (menus && menus.length > 0)) {
+    console.log(to.name)
     if (to.name === null) {
       addRouter(menus).then(data => {
         store.commit('SET_MENU_ALL', data)
@@ -42,6 +43,7 @@ router.beforeEach((to, from, next) => {
         })
       })
     } else {
+      console.log('next')
       next()
     }
   } else {

@@ -11,7 +11,7 @@ export default {
   },
   // 退出登录
   logout: {
-    method: 'post',
+    method: 'get',
     url: '/auth/logout'
   },
   // 获取个人信息

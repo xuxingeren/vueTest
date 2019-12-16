@@ -313,7 +313,7 @@ export default {
             api("login", values).then(res => {
               this.$message.success("登录成功");
               this.$router.push({
-                path: "/aaa"
+                path: "/"
               });
             });
           }

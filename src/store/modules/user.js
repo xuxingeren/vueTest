@@ -1,3 +1,9 @@
+import {
+  removeCookit,
+  getOnlyCookit,
+} from '@/utils/cookie';
+import api from "@/api";
+
 const user = {
   state: {
     userInfo: {
@@ -16,16 +22,29 @@ const user = {
     }) {
       commit('SET_MENU_ALL', [])
       sessionStorage.clear()
+      removeCookit()
+      if (getOnlyCookit()) {
+        api('logout').then(() => {
+          return Promise.resolve({
+            success: true
+          })
+        }).catch(err => {
+          console.log(err)
+          return Promise.resolve({
+            success: true
+          })
+        })
+      } else {
+        return Promise.resolve({
+          success: true
+        })
+      }
       console.log('登出清空数据')
-      return Promise.resolve({
-        success: true
-      })
     }
   },
   mutations: {
     FIND_MENU: (state, val) => {
       if (val) {
-
         state.menus = []
       } else {
         state.menus = state.menusAll
@@ -34,7 +53,7 @@ const user = {
     SET_MENU_ALL: (state, menus) => {
       state.menusAll = menus
       state.menus = menus
-      console.log(`菜单: ${menus}`)
+      console.log('菜单:', menus)
     },
     SET_COLLAPSED: (state, flag) => {
       state.collapsed = flag

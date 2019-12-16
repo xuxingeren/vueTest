@@ -4,8 +4,8 @@ import Message from "ant-design-vue/lib/message"
 import cfg from '@/config'
 import router from '@/router'
 import {
-  removeCookit,
-  getCookit
+  getCookit,
+  getOnlyCookit
 } from '@/utils/cookie'
 
 axios.defaults.baseURL = `${cfg.host}${cfg.port}${cfg.baseUrl}`
@@ -20,12 +20,12 @@ NProgress.configure({
 axios.interceptors.request.use(
   config => {
     let token = getCookit()
-    if (!token) {
+    if (!getOnlyCookit()) {
       router.replace({
         path: "/login"
       });
     } else {
-      config.headers["xuxin-auth"] = "Bearer " + getCookit();
+      config.headers["xuxin-auth"] = "Bearer " + token;
     }
     config.headers["resources-type"] = "pc";
     NProgress.start()
@@ -46,17 +46,23 @@ axios.interceptors.response.use(res => {
   return res.data;
 }, err => {
   NProgress.done()
-  if (err.response) {
-    let message = ''
-    switch (err.response.status) {
-      case 401:
-        removeCookit();
-        break;
+  let message = ''
+  if (err.message.includes('timeout')) {
+    message = '请求超时'
+  } else {
+    if (err.response) {
+      switch (err.response.status) {
+        case 401:
+          router.replace({
+            path: "/login"
+          });
+          break;
+      }
+      message = err.response.data.message;
     }
-    message = err.response.data.message;
-    Message.error(message);
   }
-  return Promise.reject(err.response.data)
+  Message.error(message);
+  return Promise.reject(err.response ? err.response.data : null)
 })
 
 export default function (options) {

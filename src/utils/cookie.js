@@ -16,8 +16,22 @@ function removeCookit(key = TokenKey) {
   Cookies.remove(key)
 }
 
+function getOnlyCookit(key = TokenKey) {
+  Cookies.set(key, '111111', {
+    expires: defaultData
+  })
+  if (Cookies.get(key) === undefined) {
+    removeCookit()
+    return true
+  } else {
+    removeCookit()
+    return false
+  }
+}
+
 export {
   setCookie,
   getCookit,
+  getOnlyCookit,
   removeCookit
 }
