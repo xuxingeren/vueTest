@@ -4,7 +4,6 @@ import Message from "ant-design-vue/lib/message"
 import cfg from '@/config'
 import router from '@/router'
 import {
-  getCookit,
   getOnlyCookit
 } from '@/utils/cookie'
 
@@ -19,13 +18,10 @@ NProgress.configure({
 
 axios.interceptors.request.use(
   config => {
-    let token = getCookit()
     if (!getOnlyCookit()) {
       router.replace({
         path: "/login"
       });
-    } else {
-      config.headers["xuxin-auth"] = "Bearer " + token;
     }
     config.headers["resources-type"] = "pc";
     NProgress.start()
@@ -39,6 +35,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(res => {
   // 响应拦截
   NProgress.done()
+  console.log(res)
   if (!res.data.success) {
     Message.error(res.data.message)
     return Promise.reject(res.data)

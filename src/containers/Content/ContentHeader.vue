@@ -32,6 +32,9 @@
 import { mapGetters } from "vuex";
 export default {
   name: "ContentHeader",
+  created() {
+    this.$store.dispatch("getUserInfo");
+  },
   methods: {
     toggleCollapsed() {
       this.$store.commit("SET_COLLAPSED", !this.$store.state.user.collapsed);

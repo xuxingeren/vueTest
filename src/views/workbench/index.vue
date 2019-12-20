@@ -5,7 +5,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {
+    this.getInfo();
+  },
+  methods: {
+    getInfo() {}
+  }
+};
 </script>
 
 <style lang="scss" scoped>

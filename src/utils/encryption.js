@@ -1,7 +1,7 @@
 import CryptoJs from 'crypto-js'
 import JSEncrypt from 'jsencrypt'
 
-function encryptByDES(message, key = '%Q!vUHNJ#$CENBnA') {
+function encryptByDES(message, key = 'M^LMhpW7wgU*t%opFGAGE7U$') {
   const keyHex = CryptoJs.enc.Utf8.parse(key);
   const encrypted = CryptoJs.TripleDES.encrypt(message, keyHex, {
     mode: CryptoJs.mode.ECB,
@@ -10,7 +10,7 @@ function encryptByDES(message, key = '%Q!vUHNJ#$CENBnA') {
   return encrypted.ciphertext.toString();
 }
 
-function decryptByDES(ciphertext, key = '%Q!vUHNJ#$CENBnA') {
+function decryptByDES(ciphertext, key = 'M^LMhpW7wgU*t%opFGAGE7U$') {
   const keyHex = CryptoJs.enc.Utf8.parse(key);
   const decrypted = CryptoJs.TripleDES.decrypt(CryptoJs.enc.Base64.stringify(CryptoJs.enc.Hex.parse(ciphertext)), keyHex, {
     mode: CryptoJs.mode.ECB,

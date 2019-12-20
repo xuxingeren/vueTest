@@ -15,6 +15,7 @@
             <a-input
               placeholder="请输入手机号"
               type="text"
+              allowClear
               ref="userInput"
               v-decorator="[
                   'user',
@@ -26,41 +27,23 @@
                 slot="prefix"
                 type="user"
               />
-              <a-icon
-                v-if="form.getFieldValue('user')"
-                slot="suffix"
-                type="close-circle"
-                @click="emitEmpty"
-              />
             </a-input>
           </a-form-item>
           <a-form-item>
-            <a-input
-              placeholder="请输入密码"
-              :type="isShowPass?'text':'password'"
+            <a-input-password
               v-decorator="[
                   'password',
                   options.password
                 ]"
+              allowClear
               size="large"
+              placeholder="请输入密码"
             >
               <a-icon
                 slot="prefix"
                 type="lock"
               />
-              <a-icon
-                v-if="isShowPass"
-                slot="suffix"
-                type="eye"
-                @click="isShowPass=!isShowPass"
-              />
-              <a-icon
-                v-else
-                slot="suffix"
-                type="eye-invisible"
-                @click="isShowPass=!isShowPass"
-              />
-            </a-input>
+            </a-input-password>
           </a-form-item>
           <a-form-item>
             <a-checkbox
@@ -101,75 +84,46 @@
                   'user',
                   options.user
                 ]"
+              allowClear
               size="large"
             >
               <a-icon
                 slot="prefix"
                 type="user"
               />
-              <a-icon
-                v-if="form.getFieldValue('user')"
-                slot="suffix"
-                type="close-circle"
-                @click="emitEmpty"
-              />
             </a-input>
           </a-form-item>
           <a-form-item>
-            <a-input
-              placeholder="请输入密码"
-              :type="isShowPass?'text':'password'"
+            <a-input-password
               v-decorator="[
                   'password',
                   options.password
                 ]"
+              allowClear
               size="large"
+              placeholder="请输入密码"
             >
               <a-icon
                 slot="prefix"
                 type="lock"
               />
-              <a-icon
-                v-if="isShowPass"
-                slot="suffix"
-                type="eye"
-                @click="isShowPass=!isShowPass"
-              />
-              <a-icon
-                v-else
-                slot="suffix"
-                type="eye-invisible"
-                @click="isShowPass=!isShowPass"
-              />
-            </a-input>
+            </a-input-password>
           </a-form-item>
           <a-form-item>
-            <a-input
-              placeholder="请再次输入密码"
-              :type="isShowPass?'text':'password'"
+            <a-input-password
               v-decorator="[
                   'againpass',
                   options.againpass
                 ]"
+              allowClear
               size="large"
+              placeholder="请再次输入密码"
             >
               <a-icon
                 slot="prefix"
                 type="lock"
               />
-              <a-icon
-                v-if="isShowPass"
-                slot="suffix"
-                type="eye"
-                @click="isShowPass=!isShowPass"
-              />
-              <a-icon
-                v-else
-                slot="suffix"
-                type="eye-invisible"
-                @click="isShowPass=!isShowPass"
-              />
-            </a-input>
+            </a-input-password>
           </a-form-item>
           <a-form-item>
             <a-button
@@ -190,8 +144,7 @@
 
 <script>
 import api from "@/api";
-import { setCookie } from "@/utils/cookie";
-import { rsaEncrypt } from "@/utils/encryption";
+import { encryptByDES } from "@/utils/encryption";
 
 export default {
   data() {
@@ -282,12 +235,6 @@ export default {
     onChange(e) {
       this.remember = e.target.checked;
     },
-    emitEmpty() {
-      this.$refs.userInput.focus();
-      this.form.setFieldsValue({
-        user: ""
-      });
-    },
     register() {
       this.form.validateFields(
         ["user", "password", "againpass"],
@@ -295,9 +242,11 @@ export default {
         (err, values) => {
           if (!err) {
             api("register", {
-              user: rsaEncrypt(values.user),
-              password: rsaEncrypt(values.password)
+              user: values.user,
+              password: encryptByDES(values.password)
             }).then(res => {
+              this.$message.success("注册成功");
+              this.onTabChange("login");
               console.log(res);
             });
           }
@@ -310,11 +259,15 @@ export default {
         { force: true },
         (err, values) => {
           if (!err) {
-            api("login", values).then(res => {
+            api("login", {
+              user: values.user,
+              password: encryptByDES(values.password)
+            }).then(res => {
               this.$message.success("登录成功");
               this.$router.push({
                 path: "/"
               });
+              console.log(res);
             });
           }
         }

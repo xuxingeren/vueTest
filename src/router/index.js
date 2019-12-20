@@ -19,5 +19,7 @@ let Router = new VueRouter({
     }
   }
 })
+
 Router.addRoutes([...page]);
+
 export default Router;

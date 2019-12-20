@@ -6,8 +6,10 @@ import store from './store'
 import {
   SsetItem,
   SgetItem
-}
-from '@/utils/storage'
+} from '@/utils/storage'
+import {
+  getOnlyCookit
+} from '@/utils/cookie'
 import {
   nextUrl
 } from "@/config/const"
@@ -47,7 +49,7 @@ router.beforeEach((to, from, next) => {
       next()
     }
   } else {
-    api('getRouteList').then(res => {
+    getOnlyCookit() ? api('getRouteList').then(res => {
       SsetItem('menus', res.data)
       addRouter(res.data).then(data => {
         store.commit('SET_MENU_ALL', data)
@@ -61,7 +63,10 @@ router.beforeEach((to, from, next) => {
           replace: true
         })
       })
-    })
+    }) : next({
+      path: "/login",
+      replace: true
+    });
   }
 })
 

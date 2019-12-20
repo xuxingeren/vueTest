@@ -10,10 +10,10 @@ let routerList = [{
   },
   children: []
 }]
-let menus = []
-let indexKey = {}
 
 function addRouter(list) {
+  let menus = []
+  let indexKey = {}
   return new Promise((resolve, reject) => {
     try {
       list.map(s => {
@@ -88,6 +88,7 @@ function addRouter(list) {
       //   icon: "experiment",
       //   children: []
       // })
+      console.log(router)
       router.addRoutes([...routerList, {
         path: '*',
         redirect: '/404'

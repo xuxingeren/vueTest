@@ -1,7 +1,9 @@
 import {
-  removeCookit,
   getOnlyCookit,
 } from '@/utils/cookie';
+import {
+  SgetItem
+} from '@/utils/storage'
 import api from "@/api";
 
 const user = {
@@ -17,14 +19,25 @@ const user = {
     menusOpenKeys: ['/system']
   },
   actions: {
+    getUserInfo({
+      commit
+    }) {
+      api('getUserInfo').then(res => {
+        commit('SET_USER_INFO', res.data)
+      })
+    },
     logOut({
       commit
     }) {
       commit('SET_MENU_ALL', [])
-      sessionStorage.clear()
-      removeCookit()
+      let menus = SgetItem('menus')
+      if (menus && menus.length > 0) {
+        window.location.reload()
+        sessionStorage.clear()
+        return
+      }
       if (getOnlyCookit()) {
-        api('logout').then(() => {
+        return api('logout').then(() => {
           return Promise.resolve({
             success: true
           })
@@ -39,7 +52,6 @@ const user = {
           success: true
         })
       }
-      console.log('登出清空数据')
     }
   },
   mutations: {
@@ -57,6 +69,9 @@ const user = {
     },
     SET_COLLAPSED: (state, flag) => {
       state.collapsed = flag
+    },
+    SET_USER_INFO: (state, data) => {
+      state.userInfo = data
     }
   }
 

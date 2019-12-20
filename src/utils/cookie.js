@@ -21,7 +21,6 @@ function getOnlyCookit(key = TokenKey) {
     expires: defaultData
   })
   if (Cookies.get(key) === undefined) {
-    removeCookit()
     return true
   } else {
     removeCookit()
