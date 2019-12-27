@@ -9,7 +9,7 @@ import api from "@/api";
 const user = {
   state: {
     userInfo: {
-      name: '徐新',
+      user: '',
       uid: '',
       avatar: ''
     },
@@ -32,7 +32,7 @@ const user = {
       commit('SET_MENU_ALL', [])
       let menus = SgetItem('menus')
       if (menus && menus.length > 0) {
-        window.location.reload()
+        // window.location.reload()
         sessionStorage.clear()
         return
       }

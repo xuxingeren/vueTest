@@ -7,11 +7,17 @@
       <div class="userInfo">
         <a-dropdown :overlayStyle="{minWidth:'120px'}">
           <div class="ant-dropdown-link">
+            <!-- <a-skeleton
+              :avatar="true"
+              :paragraph="false"
+              :loading="!!userInfo.user"
+            > -->
             <a-avatar
               :src="userInfo.avatar"
               icon="user"
             />
-            <span class="avatar-name">{{userInfo.name}}</span>
+            <span class="avatar-name">{{userInfo.user}}</span>
+            <!-- </a-skeleton> -->
           </div>
           <a-menu slot="overlay">
             <a-menu-item>
