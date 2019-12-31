@@ -52,12 +52,12 @@
             >
               记住密码
             </a-checkbox>
-            <a
+            <!-- <a
               class="login-forgot"
               href=""
             >
               忘记密码
-            </a>
+            </a> -->
           </a-form-item>
           <a-form-item>
             <a-button
@@ -144,7 +144,8 @@
 
 <script>
 import api from "@/api";
-import { encryptByDES } from "@/utils/encryption";
+import { encryptByDES, decryptByDES } from "@/utils/encryption";
+import { setCookie, getCookit, removeCookit } from "@/utils/cookie";
 
 export default {
   data() {
@@ -227,6 +228,15 @@ export default {
   },
   mounted() {
     this.$store.dispatch("logOut");
+    if (getCookit("rememberUser")) {
+      this.form.setFieldsValue({
+        user: decryptByDES(getCookit("rememberUser")) || "",
+        password: decryptByDES(getCookit("rememberPassword")) || ""
+      });
+      this.remember = true;
+    } else {
+      this.remember = false;
+    }
   },
   methods: {
     onTabChange(key) {
@@ -263,6 +273,21 @@ export default {
               user: values.user,
               password: encryptByDES(values.password)
             }).then(res => {
+              if (this.remember) {
+                setCookie(
+                  "rememberUser",
+                  encryptByDES(values.user),
+                  Date.now() + 24 * 7 * 60 * 60 * 1000
+                );
+                setCookie(
+                  "rememberPassword",
+                  encryptByDES(values.password),
+                  Date.now() + 24 * 7 * 60 * 60 * 1000
+                );
+              } else {
+                removeCookit("rememberUser");
+                removeCookit("rememberPassword");
+              }
               this.$message.success("登录成功");
               this.$router.push({
                 path: "/"

@@ -12,70 +12,50 @@ let routerList = [{
 }]
 
 function addRouter(list) {
-  let menus = []
-  let indexKey = {}
+  let obj = {}
   return new Promise((resolve, reject) => {
     try {
-      list.map(s => {
+      list = list.filter(s => {
         let comName = s.path.replace(/\/\w{1}/g, function (val) {
           return val.substring(1, 2).toUpperCase();
         })
-        if (s.isLast) {
-          let key = s.levelId.replace(/-\w+(?!.*-\w+)/, "")
-          if (indexKey[key] !== undefined) {
-            menus[indexKey[key]].children.push({
-              path: s.path,
-              name: comName,
-              meta: {
-                title: s.title
-              },
-              levelId: s.levelId,
-              icon: s.icon,
-              children: []
-            })
-          } else {
-            menus.push({
-              path: s.path,
-              name: comName,
-              meta: {
-                title: s.title
-              },
-              levelId: s.levelId,
-              icon: s.icon,
-              children: []
-            })
-          }
-          routerList[0].children.push({
-            path: s.path,
-            name: comName,
-            component(resolve) {
-              import(`../views${s.path}`).then(module => {
+        s.name = comName;
+        s.meta = {
+          title: s.title
+        }
+        routerList[0].children.push({
+          path: s.path,
+          name: comName,
+          component(resolve) {
+            import(`../views${s.path}`).then(module => {
+              resolve(module)
+            }).catch(err => {
+              import('../components/errorPage/404').then(module => {
                 resolve(module)
-              }).catch(err => {
-                console.log(err)
               })
-            },
-            meta: {
-              title: s.title
-            },
-            levelId: s.levelId,
-            icon: s.icon,
-            children: []
-          })
+              console.log(err)
+            })
+          },
+          meta: {
+            title: s.title
+          },
+          levelId: s.levelId,
+          icon: s.icon,
+          children: []
+        })
+        obj[s.id] = s;
+        if (!s.isLast) {
+          obj[s.id].children = []
+        }
+        if (s.parentId) {
+          obj[s.parentId].children.push(s)
+          return false;
         } else {
-          let index = menus.push({
-            path: s.path,
-            name: comName,
-            meta: {
-              title: s.title
-            },
-            levelId: s.levelId,
-            icon: s.icon,
-            children: []
-          })
-          indexKey[s.levelId] = index - 1
+          return true;
         }
       })
+      console.log(list)
+
       // routerList[0].children.push({
       //   path: '/test',
       //   name: 'Test',
@@ -93,14 +73,8 @@ function addRouter(list) {
         path: '*',
         redirect: '/404'
       }])
-      // router.onReady(() => {
-      //   resolve(routerList)
-      // }, (err) => {
-      //   console.log(err)
-      //   reject(err)
-      // })
       setTimeout(() => {
-        resolve(menus)
+        resolve(list)
       }, 100);
     } catch (error) {
       console.log(error)
