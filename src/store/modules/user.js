@@ -6,6 +6,46 @@ import {
 } from '@/utils/storage'
 import api from "@/api";
 
+// function findMenuId(arr, parentId, key) {
+//   arr.map(s => {
+//     if (s.id === parentId) {
+//       if (s.key) {
+//         return s.id
+//       } else {
+//         findMenuId(arr, s.parentId, key)
+//       }
+//     }
+//   })
+// }
+
+function filterMenu(list, item) {
+  let obj = {}
+  list = list.filter(s => {
+    let comName = s.path.replace(/\/\w{1}/g, function (val) {
+      return val.substring(1, 2).toUpperCase();
+    })
+    s.name = comName;
+    s.meta = {
+      title: s.title
+    }
+    obj[s.id] = s;
+    if (!s.isLast) {
+      obj[s.id].children = []
+    }
+    if (s.parentId) {
+      obj[s.parentId].children.push(s)
+      return false;
+    } else {
+      if (item.id === s.id) {
+        return true;
+      } else {
+        return false
+      }
+    }
+  })
+  return list
+}
+
 const user = {
   state: {
     userInfo: {
@@ -56,8 +96,12 @@ const user = {
   },
   mutations: {
     FIND_MENU: (state, val) => {
+      let menus = SgetItem('menus')
+      let arr = menus.filter(s => {
+        return s.title.indexOf(val) !== -1;
+      })
       if (val) {
-        state.menus = []
+        state.menus = filterMenu(menus, ...arr)
       } else {
         state.menus = state.menusAll
       }
