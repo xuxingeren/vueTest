@@ -29,11 +29,14 @@ router.beforeEach((to, from, next) => {
     return false
   }
   let menus = SgetItem('menus')
-  if ((store.state.user.menus && store.state.user.menus.length > 0) || (menus && menus.length > 0)) {
-    console.log(to.name)
+  if ((store.state.role.menus && store.state.role.menus.length > 0) || (menus && menus.length > 0)) {
     if (to.name === null) {
-      addRouter(menus).then(data => {
-        store.commit('SET_MENU_ALL', data)
+      addRouter(menus).then(({
+        list,
+        levelObj
+      }) => {
+        store.commit('SET_MENU_ALL', list)
+        store.commit('SET_LEVEL_OBJ', levelObj)
         next({
           ...to,
           replace: true
@@ -45,14 +48,19 @@ router.beforeEach((to, from, next) => {
         })
       })
     } else {
+      store.commit('SET_BREADCRUMB', to.meta)
       console.log('next')
       next()
     }
   } else {
     getOnlyCookit() ? api('getRouteList').then(res => {
       SsetItem('menus', res.data)
-      addRouter(res.data).then(data => {
-        store.commit('SET_MENU_ALL', data)
+      addRouter(res.data).then(({
+        list,
+        levelObj
+      }) => {
+        store.commit('SET_MENU_ALL', list)
+        store.commit('SET_LEVEL_OBJ', levelObj)
         next({
           ...to,
           replace: true

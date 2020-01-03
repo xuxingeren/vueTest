@@ -1,10 +1,12 @@
 <template>
-  <a-layout-header style="padding:0;">
+  <a-layout-header class="layout-header">
     <div class="content-header">
-      <a-button @click="toggleCollapsed">
-        <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
-      </a-button>
-      <div class="userInfo">
+      <div class="header-left">
+        <a-button @click="toggleCollapsed">
+          <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
+        </a-button>
+      </div>
+      <div class="header-right userInfo">
         <a-dropdown :overlayStyle="{minWidth:'120px'}">
           <div class="ant-dropdown-link">
             <!-- <a-skeleton
@@ -43,7 +45,7 @@ export default {
   },
   methods: {
     toggleCollapsed() {
-      this.$store.commit("SET_COLLAPSED", !this.$store.state.user.collapsed);
+      this.$store.commit("SET_COLLAPSED", !this.$store.state.role.collapsed);
     },
     logoutClick() {
       this.$confirm({
@@ -67,25 +69,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content-header {
-  background-color: #fff;
-  display: flex;
-  height: 100%;
-  align-items: center;
-  padding: 0 24px;
-  justify-content: space-between;
-  .ant-dropdown-link {
-    padding: 0 12px;
-    cursor: pointer;
-    transition: all 0.3s;
+.layout-header {
+  padding: 0;
+  z-index: 9;
+  position: sticky;
+  top: 0;
+  right: 0;
+  .content-header {
+    background-color: #fff;
     display: flex;
+    height: 100%;
     align-items: center;
-    &:hover {
-      background: rgba(0, 0, 0, 0.025);
+    padding: 0 24px;
+    justify-content: space-between;
+    box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+    .header-right,
+    .header-left {
+      display: flex;
+      align-items: center;
     }
-    .avatar-name {
-      margin-left: 8px;
-      color: rgba(0, 0, 0, 0.65);
+    .ant-dropdown-link {
+      padding: 0 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      &:hover {
+        background: rgba(0, 0, 0, 0.025);
+      }
+      .avatar-name {
+        margin-left: 8px;
+        color: rgba(0, 0, 0, 0.65);
+      }
     }
   }
 }

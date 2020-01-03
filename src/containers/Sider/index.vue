@@ -1,7 +1,7 @@
 <template>
   <a-layout-sider
     class="sider"
-    breakpoint="lg"
+    breakpoint="md"
     @collapse="onCollapse"
     @breakpoint="onBreakpoint"
     v-model="collapsed"
@@ -65,7 +65,7 @@ export default {
     ...mapGetters(["menus", "menusOpenKeys"]),
     collapsed: {
       get: function() {
-        return this.$store.state.user.collapsed;
+        return this.$store.state.role.collapsed;
       },
       set: function(newValue) {
         this.$store.commit("SET_COLLAPSED", newValue);

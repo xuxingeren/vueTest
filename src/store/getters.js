@@ -1,8 +1,9 @@
 const getters = {
     userInfo: state => state.user.userInfo,
-    collapsed: state => state.user.collapsed,
-    menus: state => state.user.menus,
-    menusOpenKeys: state => state.user.menusOpenKeys,
+    collapsed: state => state.role.collapsed,
+    menus: state => state.role.menus,
+    menusOpenKeys: state => state.role.menusOpenKeys,
+    breadcrumb: state => state.role.breadcrumb,
     tag: state => state.tags.tag
 }
 export default getters

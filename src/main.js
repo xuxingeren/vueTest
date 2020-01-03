@@ -4,13 +4,20 @@ import antd from 'ant-design-vue'
 import router from './router'
 import store from './store';
 import moment from 'moment';
+import {
+  exposure
+} from './directive'
 import 'moment/locale/zh-cn';
 import './permission'
 
 moment.locale('zh-cn');
 Vue.config.productionTip = false
 Vue.use(antd)
-
+Vue.directive('exposure', {
+  bind(el) {
+    new exposure().add(el);
+  },
+});
 if (process.env.VUE_APP_TITLE === 'production' || process.env.VUE_APP_TITLE === 'analyz') {
   let Sentry = require('@sentry/browser');
   let Integrations = require('@sentry/integrations');

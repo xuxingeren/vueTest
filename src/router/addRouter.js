@@ -13,6 +13,7 @@ let routerList = [{
 
 function addRouter(list) {
   let obj = {}
+  let levelObj = {}
   return new Promise((resolve, reject) => {
     try {
       list = list.filter(s => {
@@ -37,18 +38,22 @@ function addRouter(list) {
             })
           },
           meta: {
-            title: s.title
-          },
-          levelId: s.levelId,
-          icon: s.icon,
-          children: []
+            title: s.title,
+            level: s.level,
+            icon: s.icon,
+            id: s.id
+          }
         })
+        if (!levelObj[s.level]) {
+          levelObj[s.level] = {};
+        }
+        levelObj[s.level][s.id] = s;
         obj[s.id] = s;
         if (!s.isLast) {
           obj[s.id].children = []
         }
         if (s.parentId) {
-          obj[s.parentId].children.push(s)
+          s.menus && obj[s.parentId].children.push(s)
           return false;
         } else {
           return true;
@@ -74,7 +79,10 @@ function addRouter(list) {
         redirect: '/404'
       }])
       setTimeout(() => {
-        resolve(list)
+        resolve({
+          list,
+          levelObj
+        })
       }, 100);
     } catch (error) {
       console.log(error)
