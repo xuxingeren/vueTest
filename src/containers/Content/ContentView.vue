@@ -1,6 +1,9 @@
 <template>
   <a-layout-content class="content-view">
-    <div class="navigation">
+    <div
+      class="navigation"
+      v-if="breadcrumb.length > 0"
+    >
       <a-breadcrumb>
         <a-breadcrumb-item
           v-for="(item, index) in breadcrumb"
@@ -58,6 +61,8 @@ export default {
   .main {
     margin: 24px;
     flex: 1;
+    display: flex;
+    border-radius: 4px;
     background-color: #fff;
   }
 }

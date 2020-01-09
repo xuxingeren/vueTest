@@ -24,7 +24,7 @@
       />
     </div>
     <a-menu
-      :defaultSelectedKeys="[$route.path]"
+      :selectedKeys="selectedKeys"
       :defaultOpenKeys="menusOpenKeys"
       mode="inline"
       theme="dark"
@@ -32,8 +32,9 @@
     >
       <template v-for="item in menus">
         <a-menu-item
+          :title="item.path"
           v-if="!(item.children && item.children.length > 0)"
-          :key="item.name==='Index' ? item.children[0].path : item.path"
+          :key="item.path"
         >
           <a-icon :type="item.icon" />
           <span>{{item.meta.title}}</span>
@@ -58,8 +59,13 @@ export default {
   },
   data() {
     return {
-      defaultSelectedKeys: []
+      selectedKeys: [this.$route.path]
     };
+  },
+  watch: {
+    $route(to) {
+      this.selectedKeys = [to.path];
+    }
   },
   computed: {
     ...mapGetters(["menus", "menusOpenKeys"]),

@@ -105,6 +105,9 @@ const role = {
     SET_BREADCRUMB: (state, data) => {
       let arr = new Array(data.level).fill("");
       let id = data.id;
+      if (!id) {
+        return
+      }
       let level = data.level;
       let completeArr = [];
       console.log(state.levelObj)
