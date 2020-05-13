@@ -185,6 +185,7 @@ export default {
 <style lang="scss" scoped>
 .role {
   height: 10000px;
+  flex: 1;
   .aaa {
     margin-top: 800px;
   }
