@@ -23,7 +23,14 @@
       </div>
     </div>
     <main class="main">
-      <router-view />
+      <transition mode="out-in">
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive" />
+        </keep-alive>
+      </transition>
+      <transition mode="in-out">
+        <router-view v-if="!$route.meta.keepAlive" />
+      </transition>
     </main>
   </a-layout-content>
 </template>
