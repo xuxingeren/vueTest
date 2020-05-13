@@ -4,6 +4,9 @@ import Message from "ant-design-vue/lib/message"
 import cfg from '@/config'
 import router from '@/router'
 import {
+  isMobile
+} from '@/utils'
+import {
   getOnlyCookit
 } from '@/utils/cookie'
 
@@ -23,7 +26,7 @@ axios.interceptors.request.use(
         path: "/login"
       });
     }
-    config.headers["resources-type"] = "pc";
+    config.headers["resources-type"] = isMobile() ? "mobile" : "pc";
     NProgress.start()
     return config
   },

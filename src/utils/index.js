@@ -154,7 +154,7 @@ export function getAge(birthTs) {
 // ts 为停止滚动或滑动多少 毫秒后 接触禁止点击
 export function preventDelay(ts = 300) {
   window.canClick = true;
-  document.addEventListener('touchmove', (e) => {
+  document.addEventListener('touchmove', () => {
     setCanNotClick();
   }, true);
   document.addEventListener('touchmove', debounce(setCanClick, ts), true);
@@ -308,4 +308,98 @@ export function versionCompare(stra, strb) {
     }
   }
   return result;
+}
+
+
+// 浏览器相关的方法
+export function getUrlParam(name) {
+  let match = RegExp('[?&]' + name + '=([^&]*)', 'gi').exec(window.location.search)
+  return match && window.decodeURIComponent(match[1].replace(/\+/g, ' '))
+}
+
+export function isMobile() {
+  let userAgentInfo = window.navigator.userAgent.toLowerCase()
+  let Agents = ['android', 'iphone', 'symbianos', 'windows phone', 'ipod']
+  let isMobile = false
+  Agents.map((agent) => {
+    if (userAgentInfo.indexOf(agent) > 0) {
+      isMobile = true
+    }
+  })
+  return isMobile
+}
+
+export function isWeiXin() {
+  return /micromessenger/.test(window.navigator.userAgent.toLowerCase())
+}
+
+export function isAndroid() {
+  return (/android/.test(window.navigator.userAgent.toLowerCase()))
+}
+
+export function isIos() {
+  return (/iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()))
+}
+
+export function isClient() {
+  return (/JUDTrade/.test(window.navigator.userAgent))
+}
+
+export function isSina() {
+  return /weibo/.test(window.navigator.userAgent.toLowerCase())
+}
+
+export function isQQ() {
+  return /qqbrowser/.test(window.navigator.userAgent.toLowerCase())
+}
+// 设置页面 title
+// iframeSrc 推荐用图片链接, 用于在iOS微信 设置 title失败的情况所采用的黑科技
+export function setTitle({
+  title = '',
+  iframeSrc = 'https://www.jd.com/favicon.ico'
+}) {
+  document.title = title
+  if (!isClient()) {
+    if (isWeiXin() && isIos()) {
+      try {
+        let body = document.getElementsByTagName('body')[0]
+        let iframe = document.createElement('iframe')
+        iframe.setAttribute('src', iframeSrc)
+        iframe.style.display = 'none'
+        iframe.addEventListener('load', () => {
+          setTimeout(() => {
+            iframe.removeEventListener('load', false)
+            document.body.removeChild(iframe)
+          }, 0)
+        })
+        body.appendChild(iframe)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  } else {
+    window.jsBridge && window.jsBridge.changeTitle({
+      title
+    })
+  }
+}
+
+// 滚动到位置
+// 滚动的位置， 滚动的时间
+export function scrollTo(scrollTo, time) {
+  let scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+  let scrollFrom = parseInt(scrollTop)
+  let i = 0
+  let runEvery = 5
+  scrollTo = parseInt(scrollTo)
+  time = time / runEvery
+  let interval = window.setInterval(() => {
+    let scrollDis = (scrollTo - scrollFrom) / time * i + scrollFrom
+    i++
+    document.body.scrollTop = scrollDis
+    document.documentElement.scrollTop = scrollDis
+    if (i >= time) {
+      window.clearInterval(interval)
+    }
+  }, runEvery)
 }
