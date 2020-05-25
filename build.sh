@@ -65,7 +65,7 @@ echo '执行打包';
 npm run build:prod;
 echo '打包完成';
 echo "上传文件";
-scp -r ./dist root@$host:~/nginx/www/;
+scp -r ./pc root@$host:~/nginx/www/;
 # rsync  -avzP --delete ./dist/* root@$host:~/nginx/www/dist/
 echo "上传完成"
 ssh root@$host > /dev/null 2>&1 << eeooff

@@ -14,7 +14,7 @@ const buildcfg = {
   outputDir: 'pc', // 打包输出文件名
   env: process.env.VUE_APP_TITLE, // 环境变量值
   gitBranch: childProcess.execSync('git rev-parse --abbrev-ref HEAD').toString().replace(/\s+/, ''), // 当前打包分支
-  baseURL: process.env.VUE_APP_TITLE === 'production' ? `/pc/` : "/", // 打包后文件链接
+  baseURL: process.env.VUE_APP_TITLE === 'production' ? `/` : "/", // 打包后文件链接
   productionGzip: true, // 是否使用gzip
   productionGzipExtensions: ['js', 'css'], // 需要gzip压缩的文件后缀
   closeConsole: true, // 是否移除console
@@ -35,7 +35,6 @@ if (buildcfg.env !== gitObj[buildcfg.gitBranch] && buildcfg.gitBuild && process.
   目标环境：${buildcfg.env}，
   当前分支：${buildcfg.gitBranch}，对应环境变量：${gitObj[buildcfg.gitBranch]}`)
   process.exit();
-  return false;
 }
 
 const cdn = {
@@ -48,7 +47,7 @@ const cdn = {
   },
   prod: {
     css: [
-      'https://cdn.jsdelivr.net/npm/ant-design-vue@1.3.13/dist/antd.min.css',
+      'https://cdn.jsdelivr.net/npm/ant-design-vue@1.4.10/dist/antd.min.css',
       'https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css'
     ],
     js: [
@@ -57,7 +56,7 @@ const cdn = {
       'https://cdn.jsdelivr.net/npm/vuex@3.1.1/dist/vuex.min.js',
       'https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js',
       'https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js',
-      'https://cdn.jsdelivr.net/npm/ant-design-vue@1.3.13/dist/antd.min.js'
+      'https://cdn.jsdelivr.net/npm/ant-design-vue@1.4.10/dist/antd.min.js'
     ]
   }
 }

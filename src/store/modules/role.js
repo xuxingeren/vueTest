@@ -49,25 +49,14 @@ const role = {
     }) {
       commit('SET_MENU_ALL', [])
       let menus = SgetItem('menus')
-      if (menus && menus.length > 0) {
-        window.location.reload()
-        sessionStorage.clear()
-      }
       if (getOnlyCookit()) {
-        return api('logout').then(() => {
-          return Promise.resolve({
-            success: true
-          })
-        }).catch(err => {
+        api('logout').then(() => {}).catch(err => {
           console.log(err)
-          return Promise.resolve({
-            success: true
-          })
         })
-      } else {
-        return Promise.resolve({
-          success: true
-        })
+      }
+      if (menus && menus.length > 0) {
+        sessionStorage.clear()
+        window.location.reload()
       }
     }
   },
